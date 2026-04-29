@@ -1,41 +1,53 @@
 {% set name = "azure-mgmt-monitor" %}
-{% set version = "0.11.0" %}
+{% set version = "7.0.0" %}
 
 package:
-  name: {{ name|lower }}
+  name: {{ name }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.zip
-  sha256: c6e1fe83dd2ddffa7f6d90c7aa63b3128042396a3893c14dc4816ad28cb15016
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-', '_')}}-{{ version }}.tar.gz
+  sha256: b75f536441d430f69ff873a1646e5f5dbcb3080a10768a59d0adc01541623816
 
 build:
-  noarch: python
   number: 0
-  script: {{ PYTHON }} -m pip install . -vv
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  skip: true  # [py<39]
 
 requirements:
   host:
-    - python >3.0
+    - wheel
+    - python
     - pip
+    - setuptools
   run:
-    - python >3.0
-    - msrest >=0.5.0
-    - msrestazure >=0.4.32,<2.0.0
-    - azure-common >=1.1,<2.0
+    - python
+    - isodate >=0.6.1
+    - typing-extensions >=4.6.0
+    - azure-common >=1.1
+    - azure-mgmt-core>=1.5.0
 
 test:
   imports:
     - azure
     - azure.mgmt
     - azure.mgmt.monitor
+  commands:
+    - pip check
+  requires:
+    - pip
 
 about:
   home: https://github.com/Azure/azure-sdk-for-python
-  license: Apache-2.0
-  license_family: Apache
-  license_file: LICENSE.txt
   summary: Microsoft Azure Monitor Client Library for Python.
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  description: Microsoft Azure Monitor Client Library for Python.
+  dev_url: https://github.com/Azure/azure-sdk-for-python
+  doc_url: https://github.com/Azure/azure-sdk-for-python
+  
+  
 
 
 extra:
